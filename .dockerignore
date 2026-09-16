@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+.env.example
+node_modules
+vendor
+storage/app/flood-data
+storage/app/buffer-data
+test-parcel.json
+README.md
+docs
