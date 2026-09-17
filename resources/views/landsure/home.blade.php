@@ -878,21 +878,21 @@
                     <h1 class="hero-headline">
 
                         <span class="visually-hidden">
-                            Know the land before you buy, lease, rent, or invest.
+                            KNOW THE LAND BEFORE YOU, lease, rent, or invest.
                         </span>
 
                         <span aria-hidden="true">
-                            Know the land before you
+                            KNOW THE LAND BEFORE YOU
                         </span>
 
                         <span class="ticker-slot" aria-hidden="true">
 
                             <span class="ticker-inner">
 
-                                <span class="ticker-word">buy</span>
-                                <span class="ticker-word">lease</span>
-                                <span class="ticker-word">rent</span>
-                                <span class="ticker-word">invest</span>
+                                <span class="ticker-word">BUY</span>
+                                <span class="ticker-word">LEASE</span>
+                                <span class="ticker-word">RENT</span>
+                                <span class="ticker-word">INVEST</span>
 
                                 <!-- duplicate first word for a seamless loop -->
                                 <span class="ticker-word">buy</span>
@@ -914,7 +914,7 @@
 
                         <a href="/map" class="button dark large">
                             Analyze a Property
-                            <span>→</span>
+                            <span></span>
                         </a>
 
                         <a href="/parcels" class="button large">

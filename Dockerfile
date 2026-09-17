@@ -26,7 +26,8 @@ RUN composer install \
 # ============================================================
 FROM php:8.2-fpm
 
-# Install system dependencies, including Python and geospatial libs
+# Install system dependencies, including Python, geospatial libraries,
+# and gettext (for envsubst).
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -38,6 +39,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     nginx \
     supervisor \
+    gettext-base \
     python3 \
     python3-pip \
     python3-venv \
@@ -61,9 +63,12 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pyshp \
     rasterio
 
+# Python FPM listens on 9000 by default
+RUN echo "listen = 9000" >> /usr/local/etc/php-fpm.d/www.conf
+
 WORKDIR /var/www/html
 
-# Copy the application code (without vendor and node_modules)
+# Copy the application code
 COPY . .
 
 # Copy Composer's vendor folder from the vendor stage
@@ -72,11 +77,12 @@ COPY --from=vendor /app/vendor ./vendor
 # Copy the built frontend assets from the frontend stage
 COPY --from=frontend /app/public/build ./public/build
 
-# Copy Nginx configuration
+# Copy Nginx and Supervisor configs
 COPY docker/nginx.conf /etc/nginx/sites-available/default
-
-# Copy Supervisor configuration
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Make sure the Nginx sites-enabled directory exists
+RUN mkdir -p /etc/nginx/sites-enabled
 
 # Permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
