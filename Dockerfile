@@ -26,8 +26,8 @@ RUN composer install \
 # ============================================================
 FROM php:8.2-fpm
 
-# Install system dependencies, including Python, geospatial libraries,
-# and gettext (for envsubst).
+# Install system dependencies: PHP extensions, Nginx, Supervisor,
+# Python, geospatial libraries, and gettext (for envsubst).
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -63,7 +63,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pyshp \
     rasterio
 
-# Python FPM listens on 9000 by default
+# PHP-FPM listens on TCP 9000 so Nginx can reach it over the loopback.
 RUN echo "listen = 9000" >> /usr/local/etc/php-fpm.d/www.conf
 
 WORKDIR /var/www/html
@@ -77,12 +77,16 @@ COPY --from=vendor /app/vendor ./vendor
 # Copy the built frontend assets from the frontend stage
 COPY --from=frontend /app/public/build ./public/build
 
-# Copy Nginx and Supervisor configs
+# Copy Nginx and Supervisor configs.
+# The Nginx config goes to sites-available as a template.
+# The entrypoint script will envsubst it into sites-enabled at runtime.
 COPY docker/nginx.conf /etc/nginx/sites-available/default
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Make sure the Nginx sites-enabled directory exists
-RUN mkdir -p /etc/nginx/sites-enabled
+# Ensure the sites-enabled directory exists and is empty,
+# so Nginx does not load the default config from the base image.
+RUN mkdir -p /etc/nginx/sites-enabled && \
+    rm -f /etc/nginx/sites-enabled/default
 
 # Permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache

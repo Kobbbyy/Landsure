@@ -15,5 +15,9 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
+# Substitute PORT into the Nginx config before starting Nginx
+echo "Configuring Nginx to listen on port ${PORT}..."
+envsubst '\${PORT}' < /etc/nginx/sites-available/default > /etc/nginx/sites-enabled/default
+
 echo "Starting supervisor..."
 exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
