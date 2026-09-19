@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <meta name="google-site-verification" content="nzVIoq9gfW6oxa2yKSiICNt0c0P2XlmmSJ7U3B_KL1Y" />
+
     <title>LandSure — Know the Land Before You Buy It</title>
 
     @vite([
@@ -895,7 +897,7 @@
                                 <span class="ticker-word">INVEST</span>
 
                                 <!-- duplicate first word for a seamless loop -->
-                                <span class="ticker-word">buy</span>
+                                <span class="ticker-word">BUY</span>
 
                             </span>
 
