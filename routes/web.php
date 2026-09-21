@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\ParcelController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -62,6 +63,29 @@ Route::middleware('auth')->group(function () {
 Route::get('/dashboard', function () {
     return redirect()->route('parcels.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+/*
+|--------------------------------------------------------------------------
+| Google OAuth
+|--------------------------------------------------------------------------
+|
+| These routes sit outside the auth middleware, because a logged-out
+| visitor is exactly who needs to use them.
+|
+| /auth/google          -> redirect the user to Google to sign in
+| /auth/google/callback -> receive the user back from Google
+|
+| The callback URL must exactly match the "Authorized redirect URI"
+| configured in Google Cloud. For local development that is:
+|   http://127.0.0.1:8000/auth/google/callback
+|
+*/
+
+Route::get('/auth/google', [GoogleController::class, 'redirect'])
+    ->name('google.login');
+
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])
+    ->name('google.callback');
 
 /*
 |--------------------------------------------------------------------------

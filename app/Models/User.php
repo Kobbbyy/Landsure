@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'google_id',
     ];
 
     /**
@@ -44,8 +46,42 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Hash the password only when a value is actually provided.
+     *
+     * Users who sign in with Google do not have a local password.
+     * Passing null to the default "hashed" cast would still store
+     * a hash of an empty value, which is not what we want. This
+     * accessor lets the password column stay truly null for those
+     * accounts, while still hashing any real password on the way in.
+     */
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            set: function ($value) {
+                if ($value === null) {
+                    return null;
+                }
+
+                return \Illuminate\Support\Facades\Hash::make($value);
+            },
+        );
+    }
+
+    /**
+     * Whether this user has a local password.
+     *
+     * A user created through Google OAuth has no password. A user
+     * created through the normal registration flow has one. This
+     * helper is useful when deciding whether to offer password
+     * reset or password change options in the UI.
+     */
+    public function hasPassword(): bool
+    {
+        return $this->password !== null;
     }
 
     /**
