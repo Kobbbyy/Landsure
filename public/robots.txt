@@ -1,2 +1,4 @@
 User-agent: *
-Disallow:
+Allow: /
+
+Sitemap: https://landsure-47y0.onrender.com/sitemap.xml
